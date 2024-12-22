@@ -28,6 +28,7 @@ def remap_keys_from_open_clip_to_vit(
         clip_state_dict = OrderedDict({
             k.replace('module.', ''): v for k, v in clip_state_dict.items()
         })
+    print(f"clip_state_dict keys: {clip_state_dict.keys()}")
     remapped_state_dict = OrderedDict()
     key_mapping = {
         "logit_scale": "logit_scale",
