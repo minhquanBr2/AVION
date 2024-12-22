@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -21,14 +22,12 @@ def remap_keys_from_open_clip_to_vit(
     use_fast_conv1=False,
     use_flash_attn=False,
 ):
-    print(f"clip_state_dict keys: {clip_state_dict.keys()}")
     if 'state_dict' in clip_state_dict:
         clip_state_dict = clip_state_dict['state_dict']
     if list(clip_state_dict.keys())[0].startswith('module.'):
         clip_state_dict = OrderedDict({
             k.replace('module.', ''): v for k, v in clip_state_dict.items()
         })
-    print(f"clip_state_dict keys: {clip_state_dict.keys()}")
     remapped_state_dict = OrderedDict()
     key_mapping = {
         "logit_scale": "logit_scale",
@@ -63,8 +62,10 @@ def remap_keys_from_open_clip_to_vit(
         if key in ["visual.proj", "text_projection", "logit_scale"]:
             continue
         if use_fast_conv1 and key == 'visual.conv1.weight':
-            # remapped_state_dict['visual.conv1.weight'] = clip_state_dict[key].flatten(1)
-            remapped_state_dict['visual.conv1.weight'] = clip_state_dict[key]
+            remapped_state_dict['visual.conv1.weight'] = clip_state_dict[key].flatten(1)
+            # remapped_state_dict['visual.conv1.weight'] = clip_state_dict[key]
+            shape = remapped_state_dict['visual.conv1.weight']
+            remapped_state_dict['visual.conv1.weight'] = remapped_state_dict['visual.conv1.weight'].reshape((shape[0], 3, int(sqrt(shape[1] // 3)), int(sqrt(shape[1] // 3)))) 
             # assert mean is not None and std is not None
             # W_2 = clip_state_dict[key].flatten(1)
             # std = torch.tensor(std).float()
