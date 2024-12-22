@@ -63,6 +63,7 @@ def remap_keys_from_open_clip_to_vit(
         if use_fast_conv1 and key == 'visual.conv1.weight':
             # remapped_state_dict['visual.conv1.weight'] = clip_state_dict[key].flatten(1)
             remapped_state_dict['visual.conv1.weight'] = clip_state_dict[key]
+            print(f"visual.conv1.weight shape: {remapped_state_dict['visual.conv1.weight'].shape}")
             # assert mean is not None and std is not None
             # W_2 = clip_state_dict[key].flatten(1)
             # std = torch.tensor(std).float()
