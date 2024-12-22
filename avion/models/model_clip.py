@@ -191,8 +191,6 @@ def CLIP_VITL14(
         state_dict = torch.load(pretrain_path)
         print("=> loading open_clip model")
         remapped_state_dict = remap_keys_from_open_clip_to_vit(state_dict, use_flash_attn=use_flash_attn)
-        print(f"state_dict: {state_dict.keys()}")
-        print(f"remapped_state_dict: {remapped_state_dict.keys()}")
         missing_keys, unexpected_keys = model.load_state_dict(remapped_state_dict, strict=False)
         print("missing_keys: ", missing_keys)
         print("unexpected_keys: ", unexpected_keys)
