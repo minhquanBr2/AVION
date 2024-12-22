@@ -62,11 +62,10 @@ def remap_keys_from_open_clip_to_vit(
         if key in ["visual.proj", "text_projection", "logit_scale"]:
             continue
         if use_fast_conv1 and key == 'visual.conv1.weight':
-            print(f"use_fast_conv1")
             remapped_state_dict['visual.conv1.weight'] = clip_state_dict[key].flatten(1)
             # remapped_state_dict['visual.conv1.weight'] = clip_state_dict[key]
-            shape = remapped_state_dict['visual.conv1.weight']
-            remapped_state_dict['visual.conv1.weight'] = remapped_state_dict['visual.conv1.weight'].reshape((shape[0], 3, int(math.sqrt(shape[1] // 3)), int(math.sqrt(shape[1] // 3)))) 
+            # shape = remapped_state_dict['visual.conv1.weight']
+            # remapped_state_dict['visual.conv1.weight'] = remapped_state_dict['visual.conv1.weight'].reshape((shape[0], 3, int(math.sqrt(shape[1] // 3)), int(math.sqrt(shape[1] // 3)))) 
             # assert mean is not None and std is not None
             # W_2 = clip_state_dict[key].flatten(1)
             # std = torch.tensor(std).float()
@@ -99,10 +98,6 @@ def remap_keys_from_open_clip_to_vit(
                 )
             else:
                 remapped_state_dict[key_mapping[key]] = clip_state_dict[key]
-            # print key to shape
-            
-    for key, value in remapped_state_dict.items():
-        print(f"{key}: {value.shape}")
 
     return remapped_state_dict
 
