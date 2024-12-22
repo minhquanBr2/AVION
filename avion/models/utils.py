@@ -21,6 +21,7 @@ def remap_keys_from_open_clip_to_vit(
     use_fast_conv1=False,
     use_flash_attn=False,
 ):
+    print(f"clip_state_dict keys: {clip_state_dict.keys()}")
     if 'state_dict' in clip_state_dict:
         clip_state_dict = clip_state_dict['state_dict']
     if list(clip_state_dict.keys())[0].startswith('module.'):
